@@ -8,6 +8,7 @@ const cardsRouter = require('./routes/cards');
 const { register, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
+const NotFoundError = require('./errors/notFound');
 
 const { PORT = 3000 } = process.env;
 const dbAddress = 'mongodb://127.0.0.1:27017/mestodb';
@@ -20,19 +21,24 @@ app.use(cookieParser());
 app.use('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
   }),
 }), login);
 
 app.use('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
   }),
 }), register);
 
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
+app.use('/cards', auth, cardsRouter);
+
+app.use((req, res, next) => {
+  next(new NotFoundError('Запрашиваемый путь не существует.'));
+});
 
 app.use(errors());
 app.use(errorHandler);

@@ -106,7 +106,6 @@ module.exports.updateProfile = (req, res, next) => {
     {
       new: true, // обработчик then получит на вход обновлённую запись
       runValidators: true, // данные будут валидированы перед изменением
-      upsert: false, // если пользователь не найден, он не будет создан
     },
   )
     .then((user) => {
@@ -134,7 +133,6 @@ module.exports.updateAvatar = (req, res, next) => {
     {
       new: true,
       runValidators: true,
-      upsert: false,
     },
   )
     .then((user) => {
