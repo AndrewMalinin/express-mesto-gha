@@ -11,7 +11,7 @@ const errorHandler = require('./middlewares/errorHandler');
 const NotFoundError = require('./errors/notFound');
 
 const { PORT = 3000 } = process.env;
-const dbAddress = 'mongodb://127.0.0.1:27017/mestodb';
+const DB_ADDRESS = 'mongodb://127.0.0.1:27017/mestodb';
 const app = express();
 
 app.use(bodyParser.json());
@@ -34,7 +34,6 @@ app.use('/signup', celebrate({
 
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
-app.use('/cards', auth, cardsRouter);
 
 app.use((req, res, next) => {
   next(new NotFoundError('Запрашиваемый путь не существует.'));
@@ -43,7 +42,7 @@ app.use((req, res, next) => {
 app.use(errors());
 app.use(errorHandler);
 
-mongoose.connect(dbAddress, {
+mongoose.connect(DB_ADDRESS, {
   useNewUrlParser: true,
 })
   // eslint-disable-next-line no-console
