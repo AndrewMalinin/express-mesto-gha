@@ -35,11 +35,15 @@ module.exports.getAllUsers = (req, res, next) => {
 };
 
 module.exports.register = (req, res, next) => {
-  const { email, password } = req.body;
+  // eslint-disable-next-line object-curly-newline
+  const { email, password, about, avatar, name } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
       email,
       password: hash,
+      about,
+      avatar,
+      name,
     })
       .catch((err) => {
         if (err.code === 11000) {
