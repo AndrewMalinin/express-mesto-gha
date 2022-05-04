@@ -4,10 +4,10 @@ const InternalServerError = require('../errors/internalServer');
 const NotFoundError = require('../errors/notFound');
 const Card = require('../models/card');
 
-module.exports.getAllCards = (req, res) => {
+module.exports.getAllCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send(cards))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(() => next(new InternalServerError()));
 };
 
 module.exports.createCard = (req, res, next) => {
