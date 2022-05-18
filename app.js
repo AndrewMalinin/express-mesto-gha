@@ -11,7 +11,7 @@ const errorHandler = require('./middlewares/errorHandler');
 const corsChecker = require('./middlewares/corsChecker');
 const NotFoundError = require('./errors/notFound');
 
-const { PORT = 6001 } = process.env;
+const { PORT = 3000 } = process.env;
 const DB_ADDRESS = 'mongodb://127.0.0.1:27017/mestodb';
 const app = express();
 
