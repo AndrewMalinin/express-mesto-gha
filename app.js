@@ -8,15 +8,23 @@ const cardsRouter = require('./routes/cards');
 const { register, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
+const corsChecker = require('./middlewares/corsChecker');
 const NotFoundError = require('./errors/notFound');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 6001 } = process.env;
 const DB_ADDRESS = 'mongodb://127.0.0.1:27017/mestodb';
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(corsChecker);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.use('/signin', celebrate({
   body: Joi.object().keys({
@@ -31,7 +39,7 @@ app.use('/signup', celebrate({
     password: Joi.string().required(),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().required().pattern(/^(https?:\/\/)(www\.)?([\w\-._~:/?#[\]@!$&'()*+,;=]+)/),
+    avatar: Joi.string().pattern(/^(https?:\/\/)(www\.)?([\w\-._~:/?#[\]@!$&'()*+,;=]+)/),
   }),
 }), register);
 

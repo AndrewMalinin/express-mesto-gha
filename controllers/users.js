@@ -12,16 +12,8 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        constants.secretKey,
-        { expiresIn: '7d' },
-      );
-
-      // Записываем JWT в Http-only cookie
-      res.cookie('jwt', token, {
-        maxAge: 3600 * 24 * 7,
-        httpOnly: true,
+      res.send({
+        token: jwt.sign({ _id: user._id }, constants.secretKey, { expiresIn: '7d' }),
       })
         .end();
     })
