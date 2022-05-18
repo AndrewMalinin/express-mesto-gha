@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const { celebrate, Joi, errors } = require('celebrate');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 require('dotenv').config();
 
 if (process.env.NODE_ENV !== 'production') {
@@ -26,6 +27,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(corsChecker);
+app.use(requestLogger); // подключаем логгер запросов
 
 app.get('/crash-test', () => {
   setTimeout(() => {
@@ -57,8 +59,11 @@ app.use((req, res, next) => {
   next(new NotFoundError('Запрашиваемый путь не существует.'));
 });
 
+app.use(errorLogger); // подключаем логгер запросов
 app.use(errors());
 app.use(errorHandler);
+
+
 
 mongoose.connect(DB_ADDRESS, {
   useNewUrlParser: true,
