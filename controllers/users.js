@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
-const constants = require('../utils/constants');
 const UnauthorizedError = require('../errors/unauthorized');
 const InternalServerError = require('../errors/internalServer');
 const NotFoundError = require('../errors/notFound');
@@ -13,7 +12,7 @@ module.exports.login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       res.send({
-        token: jwt.sign({ _id: user._id }, constants.secretKey, { expiresIn: '7d' }),
+        token: jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' }),
       })
         .end();
     })

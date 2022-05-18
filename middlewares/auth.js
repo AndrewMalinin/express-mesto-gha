@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const constants = require('../utils/constants');
 
 const extractBearerToken = (header) => header.replace('Bearer ', '');
 
@@ -17,7 +16,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, constants.secretKey);
+    payload = jwt.verify(token, process.env.JWT_SECRET);
   } catch (err) {
     return res
       .status(401)

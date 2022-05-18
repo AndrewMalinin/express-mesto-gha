@@ -3,6 +3,13 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const { celebrate, Joi, errors } = require('celebrate');
+require('dotenv').config();
+
+if (process.env.NODE_ENV !== 'production') {
+  process.env.NODE_ENV = 'develop';
+  process.env.JWT_SECRET = 'develop-jwt-secret-key';
+}
+
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const { register, login } = require('./controllers/users');
